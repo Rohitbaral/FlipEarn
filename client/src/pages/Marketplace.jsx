@@ -3,11 +3,21 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import {useNavigate} from 'react-router-dom'
 import ListingCard from '../components/ListingCard';
+import FilterSidebar from '../components/FilterSidebar';
 
 const Marketplace = () => {
 
   const navigate = useNavigate();
   const [showFilterPhone,setShowFilterPhone] = useState(false);
+
+  const [filters, setFilters] = useState({
+    platform: null,
+    maxPrice: 100000,
+    minFollowers: 0,
+    niche: null,
+    verified: false,
+    monetized: false,
+  })
 
   const {listings} = useSelector(state => state.listing)
 
@@ -30,7 +40,10 @@ const Marketplace = () => {
       </div>
 
       <div className='relative flex items-start justify-between gap-8 pb-8'>
-        <div>Filter</div>
+
+       <FilterSidebar setFilters={setFilters} filters={filters} setShowFilterPhone={setShowFilterPhone}
+       showFilterPhone={showFilterPhone}/>
+
         <div className='flex-1 grid xl:grid-cols-2 gap-4'>
          {filteredListings.sort((a,b)=>a.featured ? -1 : b.featured ? 1 : 0).
          map((listing,index)=>(
