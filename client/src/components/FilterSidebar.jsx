@@ -137,7 +137,28 @@ const FilterSidebar = ({
               </div>
             )}
          </div>
-
+          {/* Followers Range */}
+            <div>
+            <button onClick={()=> toggleSection("followers")} className="flex items-center justify-between w-full mb-3">
+                <label className="text-sm font-medium text-gray-800">Minimum Followers</label>
+                <ChevronDown className={`size-4 transition-trasform 
+                ${expandedSections.followers ? "rotate-180" : ""}`}/>
+            </button>
+            {expandedSections.followers && (
+             <select
+             value={filters.minFollowers?.toString() || "0"}
+             onChange={(e)=>onFilterChange({...filters, minFollowers: parseInt(e.target.value) || 0})}
+             className="w-full px-3 py-2 border border-gray-300 rounded-lg
+             text-gray-700 outline-indigo-500">
+              <option value="0">Any amount</option>
+              <option value="1000">1K+</option>
+              <option value="50000">50K+</option>
+              <option value="100000">100K+</option>
+              <option value="500000">500K+</option>
+              <option value="1000000">1M+</option>
+             </select>
+            )}
+         </div>
       </div>
     </div>
   );
