@@ -9,6 +9,7 @@ const FilterSidebar = ({
   setFilters,
 }) => {
      
+   const currency = import.meta.env.VITE_CURRENCY || "$";
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
     const [search, setSearch] = useState(searchParams.get("search") || "")
@@ -34,6 +35,21 @@ const FilterSidebar = ({
     const toggleSection = (section) =>{
          setExpandedSections((prev)=>({...prev, [section]: !prev[section]}))
     }
+    
+      const onFilterChange = (newFilters) =>{
+          setFilters({...filters, ...newFilters})
+      }
+
+    const platforms = [
+      {value: "youtube" , label: "Youtube"},
+      {value: "instagram" , label: "Instagram"},
+      {value: "tiktok" , label: "Tiktok"},
+      {value: "facebook" , label: "Facebook"},
+      {value: "twitter" , label: "Twitter"},
+      {value: "linkedin" , label: "LinkedIn"},
+      {value: "twitch" , label: "Twitch"},
+      {value: "discord" , label: "Discord"},
+    ]
 
   return (
     <div
@@ -70,11 +86,58 @@ const FilterSidebar = ({
          {/* Platform Filter */}
          <div>
             <button onClick={()=> toggleSection("platform")} className="flex items-center justify-between w-full mb-3">
-                <label>Platform</label>
+                <label className="text-sm font-medium text-gray-800">Platform</label>
                 <ChevronDown className={`size-4 transition-trasform 
                 ${expandedSections.platform ? "rotate-180" : ""}`}/>
             </button>
+            {expandedSections.platform && (
+              <div className="flex flex-col gap-2">
+                {platforms.map((platform)=>(
+                  <label key={platform.value} className="flex items-center gap-2
+                  text-gray-700 text-sm">
+                    <input type="checkbox" 
+                    checked={filters.platform?.includes(platform.value) ||
+                      false }
+                      onChange={(e)=>{
+                        const checked = e.target.checked;
+                        const current = filters.platform || [];
+                        const updated = checked ? [...current, platform.value] : 
+                        current.filter((p)=> p !== platform.value);
+
+                        onFilterChange({
+                          ...filters,
+                          platform: updated.length > 0 ? updated: null
+                        })
+                      }} />
+
+                    <span>{platform.label}</span>
+                  </label>
+                ))}
+              </div>
+            )}
          </div>
+         {/* Price Range */}
+          <div>
+            <button onClick={()=> toggleSection("price")} className="flex items-center justify-between w-full mb-3">
+                <label className="text-sm font-medium text-gray-800">Price Range</label>
+                <ChevronDown className={`size-4 transition-trasform 
+                ${expandedSections.price ? "rotate-180" : ""}`}/>
+            </button>
+            {expandedSections.price && (
+              <div className="space-y-3">
+                <input type="range" min="0" max="100000" step="100"  value=
+                {filters.maxPrice || 100000} onChange={(e)=>onFilterChange({...filters, maxPrice: parseInt(e.target.value)})
+                } className="w-full h-2 bg-gray-200 rounded-lg appearance-none
+                cursor-pointer accent-indigo-600"/>
+                <div className="flex items-center justify-between text-sm
+                text-gray-600">
+                 <span>{currency}0</span>
+                 <span>{currency}{(filters.maxPrice || 100000).toLocaleString()}</span>
+                </div>
+              </div>
+            )}
+         </div>
+
       </div>
     </div>
   );
