@@ -33,6 +33,7 @@ const prevSlide = () =>setCurrent((prev)=> (prev === 0 ? images.length - 1 : pre
   const loadChatbox = () =>{
        dispatch(setChat({listing: listing}))
   }
+  
 
 useEffect(() => {
   const listing = listings.find((listing)=>listing.id === listingId)
