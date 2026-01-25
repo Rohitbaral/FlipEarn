@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {platformIcons} from '../assets/assets'
 import StatCard from '../components/StatCard'
+import CredentialSubmission from '../components/CredentialSubmission'
+import WithdrawModal from '../components/WithdrawModal'
 
 const MyListings = () => {
 
@@ -103,7 +105,8 @@ const MyListings = () => {
           {label: 'Withdrawn', value: balance.withdrawn, icon: ArrowDownCircleIcon },
           {label: 'Available', value: balance.available, icon: CoinsIcon },
         ].map((item, index)=>(
-          <div key={index} className='flex flex-1 items-center justify-between p-4 rounded-lg
+          <div onClick={()=> item.label === "Available" && 
+            setShowWithdrawal(true)} key={index} className='flex flex-1 items-center justify-between p-4 rounded-lg
           border border-gray-100 cursor-pointer'>
             <div className='flex items-center gap-3'>
               <item.icon className='text-gray-500 w-6 h-6'/>
@@ -152,7 +155,8 @@ const MyListings = () => {
                                rounded border border-gray-200 p-2 px-3'>
                                 {!listing.isCredentialSubmitted && (
                                   <>
-                                  <button className='flex items-center gap-2
+                                  <button onClick={()=> setShowCredentialSubmission
+                                    (listing)} className='flex items-center gap-2
                                   text-nowrap'>Add Credentials</button>
                                   <hr className='border-gray-200 my-2'/>
                                   </>
@@ -240,6 +244,15 @@ const MyListings = () => {
            ))}
         </div>
       )}
+
+{showCredentialSubmission && (
+  <CredentialSubmission listing={showCredentialSubmission} onClose={()=> setShowCredentialSubmission(null)}/>
+)}
+
+{showWithdrawal && (
+  <WithdrawModal onClose={()=>setShowWithdrawal(null)}/>
+)}
+
        {/* Footer */}
    <div className='bg-white border-t border-gray-200 p-4 text-center mt-28'>
       <p className='text-sm text-gray-500'>
